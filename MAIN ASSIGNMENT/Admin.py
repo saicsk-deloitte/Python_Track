@@ -67,17 +67,24 @@ class Admin():
                 sys.exit()
 
 #creating "user_credentials" class so as to perform USER_FUNCTIONALITIES
+def userdictionary(self):
+    row, col, sh1, wb = workbook("UserRegisteredDetails.xlsx", "Sheet1")
+    userDetails = {}
+    for i in range(1, row + 2):
+        cell_value1 = sh1.cell(i, 1).value
+        cell_value2 = sh1.cell(i, 5).value
+        userDetails[cell_value1] = cell_value2
+    return userDetails
+
+
 class UserCredentials(Admin):
-    def __init__(self,userName,userPassword):
-        #storing the user_credentials into dictionary
-        self.userCredentials={userName:userPassword}
-        print(f"***** Hey {self.userCredentials},you have Logged in Successfully *****")
-     #user_registration
     def validateUser(self, username, password):
-        if username in self.userCredentials.keys() and password == self.userCredentials[username]:
-            print("Logged-in Successfully")
+        userdetails = userdictionary(self)
+        if username in userdetails.keys() and password == userdetails[username]:
+            print("login Successfull")
         else:
-            print("Sorry,Login Failed!! ") #Incorrect Credentials
+            print("login Failed!!! Please Enter valid login Credentials & try again!")
+            sys.exit()
 
     def user_Functionalities(self):
         wb = openpyxl.load_workbook("MoviesInfo.xlsx")
@@ -128,7 +135,7 @@ class UserCredentials(Admin):
             print(b, end='.')
             print(sh1.cell(i, 1).value)
             b += 1
-        print("Logout")
+        print("Enter '4' for Logout")
 
         Userchoice = int(input("Enter your choose: "))
         if (Userchoice == 1):
