@@ -67,24 +67,18 @@ class Admin():
                 sys.exit()
 
 #creating "user_credentials" class so as to perform USER_FUNCTIONALITIES
-def userdictionary(self):
-    row, col, sh1, wb = workbook("UserRegisteredDetails.xlsx", "Sheet1")
-    userDetails = {}
-    for i in range(1, row + 2):
-        cell_value1 = sh1.cell(i, 1).value
-        cell_value2 = sh1.cell(i, 5).value
-        userDetails[cell_value1] = cell_value2
-    return userDetails
-
-
 class UserCredentials(Admin):
+
+    def __init__(self,userName,userPassword):
+        #storing the user_credentials into dictionary
+        self.userCredentials={userName:userPassword}
+        print(f"***** Hey {userName},you have Logged in Successfully *****")
+     #user_registration
     def validateUser(self, username, password):
-        userdetails = userdictionary(self)
-        if username in userdetails.keys() and password == userdetails[username]:
-            print("login Successfull")
+        if username in self.userCredentials.keys() and password == self.userCredentials[username]:
+            '''print("Logged-in Successfully")'''
         else:
-            print("login Failed!!! Please Enter valid login Credentials & try again!")
-            sys.exit()
+            print("Sorry,Login Failed!! ") #Incorrect Credentials
 
     def user_Functionalities(self):
         wb = openpyxl.load_workbook("MoviesInfo.xlsx")
@@ -103,35 +97,41 @@ class UserCredentials(Admin):
             print(sh1.cell(1, i).value, end=": ")
             print(sh1.cell(Userchoice + 1, i).value)
         while (True):
-            print("1.Book Tickets\n 2. Cancel Ticket\n 3. Give User Rating\n 4.exit")
+            print("1.Book Tickets\n 2. Cancel Ticket\n 3. Give User Rating\n 4.Redirect")
             TicketChoice = int(input("Enter the Choice: "))
             if (TicketChoice == 1):
                 print("***** Welcome User *****")
-                for i in range(7, 9):
+                for i in range(8,10):
                     print(f"Timing : {sh1.cell(Userchoice + 1, i).value}")
-                timing = int(input("enter the timing you want to choose: "))
-                print(f"Selected timing is {timing}")
-                print(f"No of Remaining Seats are {sh1.cell(Userchoice + 1, 13).value}")
-                totalTicketsToBeBooked = int(input("Enter the number of tickets to be Booked:"))
-                ticketsAvailable = sh1.cell(Userchoice + 1, 13).value
-                sh1.cell(Userchoice + 1, 13, value=ticketsAvailable - totalTicketsToBeBooked)
-                print(sh1.cell(Userchoice + 1, 13).value)
-                print("***** Your Tickets Booked *****")
+                choose_timing = input("enter the timing you want to choose: ")
+                print(f"Selected timing is {choose_timing}")
+                #print(f"No of Remaining Seats are {sh1.cell(Userchoice + 1, 15).value}")
+                print(f"Available tickets are {sh1.cell(Userchoice + 1, 15).value}")
+                Bookedtickets = int(input("Enter the number of tickets to be Booked:"))
+                Availtickets = sh1.cell(Userchoice + 1, 15).value
+                sh1.cell(Userchoice + 1, 15, value=Availtickets - Bookedtickets)
+                print(f"Available tickets after your booking are {sh1.cell(Userchoice + 1, 15).value}")
+
+                #print(sh1.cell(Userchoice + 1, 13).value)
+                print("***** Well !! Your Tickets are Booked *****")
                 wb.save("Movies.xlsx")
             elif (TicketChoice == 2):
-                ticketsTobeCancelled = int(input("enter the Number of tickets to be Cancelled"))
-                ticketsAvailable = sh1.cell(Userchoice + 1, 13).value
-                sh1.cell(Userchoice + 1, 13, value=ticketsAvailable + ticketsTobeCancelled)
-                print(sh1.cell(Userchoice + 1, 13).value)
+                ticketsTobeCancelled = int(input("enter the Number of tickets to be Cancelled:"))
+                Availtickets= sh1.cell(Userchoice + 1, 15).value
+                sh1.cell(Userchoice + 1, 15, value=Availtickets + ticketsTobeCancelled)
+                print("*** Cool!! Your Tickets are Cancelled")
+                print(f"Now ,Available tickets are {sh1.cell(Userchoice + 1, 15).value}")
                 wb.save("Movies.xlsx")
             elif (TicketChoice == 3):
                 userRating = input("Kindly provide your Review for above movie")
+                print(f"You have rated {userRating} out of 5 , Thanks!!")
             elif (TicketChoice == 4):
                 break
     def moviesInfo(self):
         row, col, sh1, wb = workbook("Movies.xlsx", "Sheet1")
         b = 1
         for i in range(2, row + 1):
+            print("Movies Available are:")
             print(b, end='.')
             print(sh1.cell(i, 1).value)
             b += 1
