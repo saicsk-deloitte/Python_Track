@@ -80,16 +80,16 @@ class UserCredentials(Admin):
         else:
             print("Sorry,Login Failed!! ") #Incorrect Credentials
 
-    def user_Functionalities(self):
-        wb = openpyxl.load_workbook("MoviesInfo.xlsx")
-        sh1 = wb['Sheet1']
-        row = sh1.max_row
-        col = sh1.max_column
-        m = 1
-        for i in range(2,row+1):
-            nextMovie=print(sh1.cell(i,1).value)
-            print(f"{nextMovie}")
-            m+=1
+    #def user_Functionalities(self):
+        #wb = openpyxl.load_workbook("MoviesInfo.xlsx")
+        #sh1 = wb['Sheet1']
+        #row = sh1.max_row
+        #col = sh1.max_column
+        #m = 1
+        #for i in range(2,row+1):
+            #nextMovie=print(sh1.cell(i,1).value)
+            #print(f"{nextMovie}")
+            #m+=1
 
     def Booktickets(self, Userchoice):
         row, col, sh1, wb = workbook("Movies.xlsx", "Sheet1")
