@@ -73,7 +73,7 @@ class UserCredentials(Admin):
         self.userCredentials={userName:userPassword}
         print(f"***** Hey {self.userCredentials},you have Logged in Successfully *****")
      #user_registration
-    def user_Registration(self, username, password):
+    def validateUser(self, username, password):
         if username in self.userCredentials.keys() and password == self.userCredentials[username]:
             print("Logged-in Successfully")
         else:
@@ -90,21 +90,80 @@ class UserCredentials(Admin):
             print(f"{nextMovie}")
             m+=1
 
+    def Booktickets(self, Userchoice):
+        row, col, sh1, wb = workbook("Movies.xlsx", "Sheet1")
+        for i in range(1, col + 1):
+            print(sh1.cell(1, i).value, end=": ")
+            print(sh1.cell(Userchoice + 1, i).value)
+        while (True):
+            print("1.Book Tickets\n 2. Cancel Ticket\n 3. Give User Rating\n 4.exit")
+            TicketChoice = int(input("Enter the Choice: "))
+            if (TicketChoice == 1):
+                print("***** Welcome User *****")
+                for i in range(7, 9):
+                    print(f"Timing : {sh1.cell(Userchoice + 1, i).value}")
+                timing = int(input("enter the timing you want to choose: "))
+                print(f"Selected timing is {timing}")
+                print(f"No of Remaining Seats are {sh1.cell(Userchoice + 1, 13).value}")
+                totalTicketsToBeBooked = int(input("Enter the number of tickets to be Booked:"))
+                ticketsAvailable = sh1.cell(Userchoice + 1, 13).value
+                sh1.cell(Userchoice + 1, 13, value=ticketsAvailable - totalTicketsToBeBooked)
+                print(sh1.cell(Userchoice + 1, 13).value)
+                print("***** Your Tickets Booked *****")
+                wb.save("Movies.xlsx")
+            elif (TicketChoice == 2):
+                ticketsTobeCancelled = int(input("enter the Number of tickets to be Cancelled"))
+                ticketsAvailable = sh1.cell(Userchoice + 1, 13).value
+                sh1.cell(Userchoice + 1, 13, value=ticketsAvailable + ticketsTobeCancelled)
+                print(sh1.cell(Userchoice + 1, 13).value)
+                wb.save("Movies.xlsx")
+            elif (TicketChoice == 3):
+                userRating = input("Kindly provide your Review for above movie")
+            elif (TicketChoice == 4):
+                break
+    def moviesInfo(self):
+        row, col, sh1, wb = workbook("Movies.xlsx", "Sheet1")
+        b = 1
+        for i in range(2, row + 1):
+            print(b, end='.')
+            print(sh1.cell(i, 1).value)
+            b += 1
+        print("Logout")
 
-print("*****Welcome to BookMyShow*****\n  1.Login\n  2.Register\n  3.Exit")
-user_inp=int(input("Enter your choice:"))
+        Userchoice = int(input("Enter your choose: "))
+        if (Userchoice == 1):
+            print("***** Welcome User *****")
+            self.Booktickets(1)
+        elif (Userchoice == 2):
+            print("***** Welcome User *****")
+            self.Booktickets(2)
+        elif (Userchoice == 3):
+            print("***** Welcome User *****")
+            self.Booktickets(3)
 while(True):
-    if(user_inp==1):
+    print("***** Welcome to BookMyShow *****\n  1.Login\n  2.Register\n  3.Exit")
+    user_inp=int(input("Enter your choice:"))
+    if(user_inp==3):
+        break
+    elif(user_inp==1):
         print("Welcome\n 1.Admin Login \n2.UserLogin")
-        login=int(input("Enter your Choice:"))
-        if(login==1):
+        choice=int(input("Enter your Choice:"))
+        if(choice==1):
             name=input("Enter your Name:")
             password=input("Enter your Password: ")
-            admin=Admin("Admin","Admin@123")
-            admin.adminFunctionalities(int(input("Enter your choice to operate:")))
-        break
+            admin=Admin(name,password)
+            admin.adminFunctionalities()
+
+        elif(choice==2):
+            userName=input("enter user_name:")
+            userPassword=input("enter password:")
+            SaiKumar=UserCredentials(userName,userPassword)
+            SaiKumar.validateUser(userName,userPassword)
+            SaiKumar.moviesInfo()
     elif(user_inp==2):
-        print("Welcome User")
-        break
+        row, col, sh1, wb = workbook("UserRegisteredDetails.xlsx", "Sheet1")
+        for i in range(1, col + 1):
+            sh1.cell(row + 1, i, value=input(f"Enter your {sh1.cell(1, i).value}"))
+        wb.save("UserRegisteredDetails.xlsx")
     else:
         sys.exit()
